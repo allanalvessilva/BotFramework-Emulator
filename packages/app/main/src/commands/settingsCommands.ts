@@ -36,6 +36,7 @@ import { CommandRegistryImpl } from '@bfemulator/sdk-shared';
 
 import { setFramework } from '../settingsData/actions/frameworkActions';
 import { dispatch, getSettings } from '../settingsData/store';
+import { TelemetryService } from '../telemetry';
 
 /** Registers settings commands */
 export function registerCommands(commandRegistry: CommandRegistryImpl) {
@@ -43,12 +44,15 @@ export function registerCommands(commandRegistry: CommandRegistryImpl) {
 
   // ---------------------------------------------------------------------------
   // Saves global app settings
-  commandRegistry.registerCommand(
-    Commands.SaveAppSettings,
-    (settings: FrameworkSettings): any => {
-      dispatch(setFramework(settings));
+  commandRegistry.registerCommand(Commands.SaveAppSettings, (settings: FrameworkSettings): any => {
+    const frameworkSettings = getSettings().framework;
+    const { ngrokPath = '' } = frameworkSettings;
+    const { ngrokPath: newNgrokPath } = settings;
+    if (newNgrokPath !== ngrokPath) {
+      TelemetryService.trackEvent('app_configureNgrok');
     }
-  );
+    dispatch(setFramework(settings));
+  });
 
   // ---------------------------------------------------------------------------
   // Get and return app settings from store

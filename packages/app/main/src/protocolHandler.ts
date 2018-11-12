@@ -39,17 +39,16 @@ import {
   newBot,
   newEndpoint,
   newNotification,
-  SharedConstants,
+  SharedConstants
 } from '@bfemulator/app-shared';
+import got from 'got';
+import { IEndpointService } from 'botframework-config/lib/schema';
 import {
   applyBotConfigOverrides,
   BotConfigOverrides,
   BotConfigWithPath,
   BotConfigWithPathImpl,
 } from '@bfemulator/sdk-shared';
-import { IEndpointService } from 'botframework-config/lib/schema';
-import got from 'got';
-
 import * as BotActions from './botData/actions/botActions';
 import { getStore } from './botData/store';
 import { Protocol } from './constants';
@@ -58,6 +57,7 @@ import { mainWindow } from './main';
 import { ngrokEmitter, running } from './ngrok';
 import { getSettings } from './settingsData/store';
 import { sendNotificationToClient } from './utils/sendNotificationToClient';
+import { TelemetryService } from './telemetry';
 
 enum ProtocolDomains {
   livechat,
@@ -167,6 +167,7 @@ export const ProtocolHandler = new class ProtocolHandlerImpl
     switch (ProtocolTranscriptActions[protocol.action]) {
       case ProtocolTranscriptActions.open:
         this.openTranscript(protocol);
+        TelemetryService.trackEvent('transcriptFile_open', { method: 'protocol' });
         break;
 
       default:
@@ -414,6 +415,8 @@ export const ProtocolHandler = new class ProtocolHandlerImpl
         );
       }
     }
+    const numOfServices = bot.services && bot.services.length;
+    TelemetryService.trackEvent('bot_open', { method: 'protocol', numOfServices });
   }
 }();
 

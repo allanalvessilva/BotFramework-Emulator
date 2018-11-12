@@ -129,11 +129,14 @@ function* doOpenResource(
   action: ResourcesAction<IFileService>
 ): IterableIterator<any> {
   const { OpenChatFile, OpenTranscript } = SharedConstants.Commands.Emulator;
+  const { TrackEvent } = SharedConstants.Commands.Telemetry;
   const { path } = action.payload;
   if (isChatFile(path)) {
     yield CommandServiceImpl.call(OpenChatFile, path, true);
+    CommandServiceImpl.remoteCall(TrackEvent, 'chatFile_open');
   } else if (isTranscriptFile(path)) {
     yield CommandServiceImpl.call(OpenTranscript, path);
+    CommandServiceImpl.remoteCall(TrackEvent, 'transcriptFile_open', { method: 'resources_pane' });
   }
   // unknown types just fall into the abyss
 }

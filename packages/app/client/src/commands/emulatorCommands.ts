@@ -50,6 +50,7 @@ import { CommandServiceImpl } from '../platform/commands/commandServiceImpl';
 /** Registers emulator (actual conversation emulation logic) commands */
 export function registerCommands(commandRegistry: CommandRegistryImpl) {
   const { Emulator } = SharedConstants.Commands;
+  const { TrackEvent } = SharedConstants.Commands.Telemetry;
 
   // ---------------------------------------------------------------------------
   // Open a new emulator tabbed document
@@ -79,13 +80,15 @@ export function registerCommands(commandRegistry: CommandRegistryImpl) {
         );
       }
 
-      store.dispatch(
-        EditorActions.open({
-          contentType: Constants.CONTENT_TYPE_LIVE_CHAT,
-          documentId,
-          isGlobal: false,
-        })
-      );
+      if (!isLocalHostUrl(endpoint.endpoint)) {
+        CommandServiceImpl.remoteCall(TrackEvent, 'livechat_openRemote');
+      }
+
+      store.dispatch(EditorActions.open({
+        contentType: Constants.CONTENT_TYPE_LIVE_CHAT,
+        documentId,
+        isGlobal: false
+      }));
       return documentId;
     }
   );
@@ -140,6 +143,7 @@ export function registerCommands(commandRegistry: CommandRegistryImpl) {
         dialogOptions
       );
       await CommandServiceImpl.call(Emulator.OpenTranscript, filename);
+      CommandServiceImpl.remoteCall(TrackEvent, 'transcriptFile_open', { method: 'file_menu' });
     } catch (e) {
       const errMsg = `Error while opening transcript file: ${e}`;
       const notification = newNotification(errMsg);
@@ -220,4 +224,15 @@ export function registerCommands(commandRegistry: CommandRegistryImpl) {
       }
     }
   );
+}
+
+function isLocalHostUrl(url: string): boolean {
+  try {
+    const parsedUrl = new URL(url);
+    const localhostNames = ['localhost', '127.0.0.1', '::1'];
+    return localhostNames.some(name => parsedUrl.hostname === name);
+  } catch (e) {
+    // invalid url was passed in
+    return false;
+  }
 }

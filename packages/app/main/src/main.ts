@@ -77,11 +77,17 @@ import {
 import { openFileFromCommandLine } from './utils/openFileFromCommandLine';
 import { sendNotificationToClient } from './utils/sendNotificationToClient';
 import { WindowManager } from './windowManager';
+import { Protocol } from './constants';
+import { TelemetryService } from './telemetry';
 
 export let mainWindow: Window;
 export let windowManager: WindowManager;
 
+// start app startup timer
+const beginStartupTime = Date.now();
+
 const store = getStore();
+
 // -----------------------------------------------------------------------------
 (process as NodeJS.EventEmitter).on('uncaughtException', (error: Error) => {
   // eslint-disable-next-line no-console
@@ -506,6 +512,12 @@ const createMainWindow = async () => {
     saveSettings<PersistentSettings>('server.json', getSettings());
     Electron.app.quit();
   });
+
+  // log app startup time in seconds
+  const endStartupTime = Date.now();
+  const startupTime = (endStartupTime - beginStartupTime) / 1000;
+  const launchedByProtocol = process.argv.some(arg => arg.includes(Protocol));
+  TelemetryService.trackEvent('app_launch', { method: launchedByProtocol ? 'protocol' : 'binary', startupTime });
 };
 
 function loadMainPage() {

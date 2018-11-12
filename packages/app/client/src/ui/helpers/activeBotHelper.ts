@@ -51,11 +51,13 @@ import { hasNonGlobalTabs } from '../../data/editorHelpers';
 import { store } from '../../data/store';
 import { CommandServiceImpl } from '../../platform/commands/commandServiceImpl';
 
+const { Bot, Electron, Emulator, Telemetry } = SharedConstants.Commands;
+
 export const ActiveBotHelper = new class {
   async confirmSwitchBot(): Promise<any> {
     if (hasNonGlobalTabs()) {
       return await CommandServiceImpl.remoteCall(
-        SharedConstants.Commands.Electron.ShowMessageBox,
+        Electron.ShowMessageBox,
         true,
         {
           buttons: ['Cancel', 'OK'],
@@ -123,7 +125,7 @@ export const ActiveBotHelper = new class {
 
   /** tell the server-side the active bot is now closed */
   closeActiveBot(): Promise<any> {
-    return CommandServiceImpl.remoteCall(SharedConstants.Commands.Bot.Close)
+    return CommandServiceImpl.remoteCall(Bot.Close)
       .then(() => {
         store.dispatch(BotActions.close());
         CommandServiceImpl.remoteCall(
@@ -142,7 +144,7 @@ export const ActiveBotHelper = new class {
   async botAlreadyOpen(): Promise<any> {
     // TODO - localization
     return await CommandServiceImpl.remoteCall(
-      SharedConstants.Commands.Electron.ShowMessageBox,
+      Electron.ShowMessageBox,
       true,
       {
         buttons: ['OK'],
@@ -200,7 +202,7 @@ export const ActiveBotHelper = new class {
 
   browseForBotFile(): Promise<any> {
     return CommandServiceImpl.remoteCall(
-      SharedConstants.Commands.Electron.ShowOpenDialog,
+      Electron.ShowOpenDialog,
       {
         buttonLabel: 'Choose file',
         filters: [
@@ -246,6 +248,8 @@ export const ActiveBotHelper = new class {
             bot
           );
           await CommandServiceImpl.call(SharedConstants.Commands.Bot.Load, bot);
+          const numOfServices = bot.services && bot.services.length;
+          CommandServiceImpl.remoteCall(Telemetry.TrackEvent, `bot_open`, { method: 'file_browse', numOfServices });
         }
       }
     } catch (err) {

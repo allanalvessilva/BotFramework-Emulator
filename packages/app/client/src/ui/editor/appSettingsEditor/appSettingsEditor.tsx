@@ -73,6 +73,7 @@ interface AppSettingsEditorState {
 const defaultAppSettings: FrameworkSettings = {
   autoUpdate: true,
   bypassNgrokLocalhost: true,
+  collectUsageData: true,
   locale: '',
   localhost: '',
   ngrokPath: '',
@@ -228,18 +229,20 @@ export class AppSettingsEditor extends React.Component<
               label="Use a sign-in verification code for OAuthCards"
             />
             <SmallHeader>Application Updates</SmallHeader>
-            <Checkbox
-              className={styles.checkboxOverrides}
-              checked={uncommitted.autoUpdate}
-              onChange={this.onChangeAutoInstallUpdates}
-              label="Automatically download and install updates"
-            />
-            <Checkbox
-              className={styles.checkboxOverrides}
-              checked={uncommitted.usePrereleases}
-              onChange={this.onChangeUsePrereleases}
-              label="Use pre-release versions"
-            />
+            <Checkbox className={ styles.checkboxOverrides }
+              checked={ uncommitted.autoUpdate }
+              onChange={ this.onChangeAutoInstallUpdates }
+              label="Automatically download and install updates"/>
+            <Checkbox className={ styles.checkboxOverrides }
+              checked={ uncommitted.usePrereleases }
+              onChange={ this.onChangeUsePrereleases }
+              label="Use pre-release versions"/>
+            <SmallHeader>Data Collection</SmallHeader>
+            <Checkbox className={ styles.checkboxOverrides }
+              checked={ uncommitted.collectUsageData }
+              onChange={ this.onChangeCollectUsageData }
+              label="Help improve the Emulator by allowing us to collect usage data."/>
+            <a target="_blank" href="https://aka.ms/bot-framework-emulator-data-collection">Learn more.</a>
           </Column>
         </Row>
         <Row className={styles.buttonRow} justify={RowJustification.Right}>
@@ -270,6 +273,10 @@ export class AppSettingsEditor extends React.Component<
       usePrereleases: !this.state.uncommitted.usePrereleases,
     });
   };
+
+  private onChangeCollectUsageData = (): void => {
+    this.setUncommittedState({ collectUsageData: !this.state.uncommitted.collectUsageData });
+  }
 
   private setUncommittedState(patch: any) {
     this.setState(state => {
@@ -322,6 +329,7 @@ export class AppSettingsEditor extends React.Component<
       locale: uncommitted.locale.trim(),
       usePrereleases: uncommitted.usePrereleases,
       autoUpdate: uncommitted.autoUpdate,
+      collectUsageData: uncommitted.collectUsageData
     };
 
     CommandServiceImpl.remoteCall(Commands.Settings.SaveAppSettings, settings)

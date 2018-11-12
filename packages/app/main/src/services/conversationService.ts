@@ -30,17 +30,17 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+import { TelemetryService } from '../telemetry';
+
 export const headers = {
   'Content-Accept': 'application/json',
 };
 
 export class ConversationService {
-  public static addUser(
-    serviceUrl: string,
-    conversationId: string,
-    name?: string,
-    id?: string
-  ) {
+
+  public static addUser(serviceUrl: string, conversationId: string, name?: string, id?: string) {
+    TelemetryService.trackEvent('sendActivity_addUser');
     const url = `${serviceUrl}/emulator/${conversationId}/users`;
     return fetch(url, {
       headers,
@@ -49,11 +49,8 @@ export class ConversationService {
     });
   }
 
-  public static removeUser(
-    serviceUrl: string,
-    conversationId: string,
-    id: string
-  ) {
+  public static removeUser(serviceUrl: string, conversationId: string, id: string) {
+    TelemetryService.trackEvent('sendActivity_removeUser');
     const url = `${serviceUrl}/emulator/${conversationId}/users`;
     return fetch(url, {
       headers,
@@ -71,6 +68,7 @@ export class ConversationService {
   }
 
   public static botContactAdded(serviceUrl: string, conversationId: string) {
+    TelemetryService.trackEvent('sendActivity_botContactAdded');
     const url = `${serviceUrl}/emulator/${conversationId}/contacts`;
     return fetch(url, {
       headers,
@@ -79,6 +77,7 @@ export class ConversationService {
   }
 
   public static botContactRemoved(serviceUrl: string, conversationId: string) {
+    TelemetryService.trackEvent('sendActivity_botContactRemoved');
     const url = `${serviceUrl}/emulator/${conversationId}/contacts`;
     return fetch(url, {
       headers,
@@ -87,6 +86,7 @@ export class ConversationService {
   }
 
   public static typing(serviceUrl: string, conversationId: string) {
+    TelemetryService.trackEvent('sendActivity_typing');
     const url = `${serviceUrl}/emulator/${conversationId}/typing`;
     return fetch(url, {
       headers,
@@ -95,6 +95,7 @@ export class ConversationService {
   }
 
   public static ping(serviceUrl: string, conversationId: string) {
+    TelemetryService.trackEvent('sendActivity_ping');
     const url = `${serviceUrl}/emulator/${conversationId}/ping`;
     return fetch(url, {
       headers,
@@ -103,6 +104,7 @@ export class ConversationService {
   }
 
   public static deleteUserData(serviceUrl: string, conversationId: string) {
+    TelemetryService.trackEvent('sendActivity_deleteUserData');
     const url = `${serviceUrl}/emulator/${conversationId}/userdata`;
     return fetch(url, {
       headers,

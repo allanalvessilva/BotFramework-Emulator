@@ -31,39 +31,4 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import { SharedConstants } from '@bfemulator/app-shared';
-import { connect } from 'react-redux';
-
-import * as ChatActions from '../../../../../data/action/chatActions';
-import { RootState } from '../../../../../data/store';
-import { CommandServiceImpl } from '../../../../../platform/commands/commandServiceImpl';
-
-import { LogEntry as LogEntryComponent, LogEntryProps } from './logEntry';
-
-function mapStateToProps(_state: RootState): Partial<LogEntryProps> {
-  return {};
-}
-
-function mapDispatchToProps(dispatch: any): Partial<LogEntryProps> {
-  return {
-    setInspectorObjects: (documentId: string, obj: any) => {
-      dispatch(ChatActions.setInspectorObjects(documentId, obj));
-    },
-    reconnectNgrok: () => {
-      const { Ngrok } = SharedConstants.Commands;
-      CommandServiceImpl.remoteCall(Ngrok.Reconnect);
-    },
-    showAppSettings: () => {
-      const { UI } = SharedConstants.Commands;
-      CommandServiceImpl.call(UI.ShowAppSettings);
-    },
-    trackEvent: (name: string, properties?: { [key: string]: any }) => {
-      CommandServiceImpl.remoteCall(SharedConstants.Commands.Telemetry.TrackEvent, name, properties);
-    }
-  };
-}
-
-export const LogEntry = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LogEntryComponent);
+export * from './telemetryService';
