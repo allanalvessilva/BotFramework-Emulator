@@ -48,6 +48,7 @@ import {
   CONTENT_TYPE_TRANSCRIPT,
   CONTENT_TYPE_WELCOME_PAGE,
 } from '../../../../constants';
+import { SharedConstants } from '@bfemulator/app-shared';
 
 import { TabBarContainer } from './tabBarContainer';
 import { TabBar } from './tabBar';
@@ -72,6 +73,16 @@ jest.mock('../tab/tab', () => ({
   get Tab() {
     return mockTab;
   },
+}));
+
+let mockRemoteCallsMade;
+jest.mock('../../../../platform/commands/commandServiceImpl', () => ({
+  CommandServiceImpl: {
+    remoteCall: (commandName, ...args) => {
+      mockRemoteCallsMade.push({ commandName, args });
+      return Promise.resolve(true);
+    }
+  }
 }));
 
 describe('TabBar', () => {
@@ -112,6 +123,7 @@ describe('TabBar', () => {
     };
     mockStore = createStore((_state, _action) => defaultState);
     mockDispatch = jest.spyOn(mockStore, 'dispatch');
+    mockRemoteCallsMade = [];
     wrapper = mount(
       <Provider store={mockStore}>
         <TabBarContainer owningEditor={'primary'} />
@@ -125,6 +137,9 @@ describe('TabBar', () => {
     instance.onPresentationModeClick();
 
     expect(mockDispatch).toHaveBeenCalledWith(enable());
+    expect(mockRemoteCallsMade).toHaveLength(1);
+    expect(mockRemoteCallsMade[0].commandName).toBe(SharedConstants.Commands.Telemetry.TrackEvent);
+    expect(mockRemoteCallsMade[0].args).toEqual(['tabBar_presentationMode']);
   });
 
   it('should load widgets', () => {
@@ -204,10 +219,13 @@ describe('TabBar', () => {
 
   it('should handle a split click', () => {
     instance.onSplitClick();
-
+    
     expect(mockDispatch).toHaveBeenCalledWith(
       splitTab('transcript', 'doc1', 'primary', 'secondary')
     );
+    expect(mockRemoteCallsMade).toHaveLength(1);
+    expect(mockRemoteCallsMade[0].commandName).toBe(SharedConstants.Commands.Telemetry.TrackEvent);
+    expect(mockRemoteCallsMade[0].args).toEqual(['tabBar_splitTab']);
   });
 
   it('should handle a drag enter event', () => {

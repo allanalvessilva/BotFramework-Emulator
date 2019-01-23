@@ -63,7 +63,7 @@ import { ToolBar } from './toolbar/toolbar';
 
 const { encode } = base64Url;
 
-const RestartConversationOptions = {
+export const RestartConversationOptions = {
   NewUserId: 'Restart with new user ID',
   SameUserId: 'Restart with same user ID',
 };
@@ -93,7 +93,7 @@ interface EmulatorProps {
   url?: string;
 }
 
-class EmulatorComponent extends React.Component<EmulatorProps, {}> {
+export class EmulatorComponent extends React.Component<EmulatorProps, {}> {
   private readonly onVerticalSizeChange = debounce(sizes => {
     this.props.document.ui = {
       ...this.props.document.ui,
@@ -227,7 +227,7 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
               props.document.documentId
             );
 
-            this.props.updateDocument(this.props.documentId, fileInfo);
+            this.props.updateDocument(props.documentId, fileInfo);
           } catch (err) {
             throw new Error(
               `Error while feeding transcript on disk to conversation: ${err}`

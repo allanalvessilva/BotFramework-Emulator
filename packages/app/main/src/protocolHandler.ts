@@ -167,7 +167,6 @@ export const ProtocolHandler = new class ProtocolHandlerImpl
     switch (ProtocolTranscriptActions[protocol.action]) {
       case ProtocolTranscriptActions.open:
         this.openTranscript(protocol);
-        TelemetryService.trackEvent('transcriptFile_open', { method: 'protocol' });
         break;
 
       default:
@@ -263,7 +262,7 @@ export const ProtocolHandler = new class ProtocolHandlerImpl
     const { url } = protocol.parsedArgs;
     const options = { url };
 
-    got(options)
+    return got(options)
       .then(res => {
         if (/^2\d\d$/.test(res.statusCode)) {
           if (res.body) {
@@ -334,14 +333,10 @@ export const ProtocolHandler = new class ProtocolHandlerImpl
         secret
       );
       if (!bot) {
-        throw new Error(
-          `Error occurred while trying to open bot at: ${path} inside of protocol handler.`
-        );
+        throw new Error(`Error occurred while trying to open bot at ${path} inside of protocol handler: Bot is invalid.`);
       }
     } catch (e) {
-      throw new Error(
-        `Error occurred while trying to open bot at: ${path} inside of protocol handler.`
-      );
+      throw new Error(`Error occurred while trying to open bot at ${path} inside of protocol handler: ${e}`);
     }
 
     // apply any overrides
@@ -374,7 +369,7 @@ export const ProtocolHandler = new class ProtocolHandlerImpl
           );
         } catch (e) {
           throw new Error(
-            `(ngrok running) Error occurred while trying to deep link to bot project at: ${path}.`
+            `(ngrok running) Error occurred while trying to deep link to bot project at ${path}: ${e}`
           );
         }
       } else {
@@ -393,7 +388,8 @@ export const ProtocolHandler = new class ProtocolHandlerImpl
               );
             } catch (e) {
               throw new Error(
-                `(ngrok running but not connected) Error occurred while trying to deep link to bot project at: ${path}.`
+                `(ngrok running but not connected) Error occurred while ` +
+                `trying to deep link to bot project at ${path}: ${e}`
               );
             }
           }
@@ -411,7 +407,7 @@ export const ProtocolHandler = new class ProtocolHandlerImpl
         );
       } catch (e) {
         throw new Error(
-          `(ngrok not configured) Error occurred while trying to deep link to bot project at: ${path}`
+          `(ngrok not configured) Error occurred while trying to deep link to bot project at ${path}: ${e}`
         );
       }
     }

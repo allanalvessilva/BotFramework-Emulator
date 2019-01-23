@@ -60,7 +60,7 @@ export class TelemetryService {
   private static startup(): void {
     if (!this._hasStarted) {
       AppInsights
-        .setup(INSTRUMENTATION_KEY) 
+        .setup(INSTRUMENTATION_KEY)
         // turn off extra instrmentation
         .setAutoCollectConsole(false)
         .setAutoCollectDependencies(false)

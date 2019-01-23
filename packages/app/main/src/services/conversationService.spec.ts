@@ -30,14 +30,15 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-import '../fetchProxy';
 
+import { TelemetryService } from '../telemetry';
+import '../fetchProxy';
 import {
   ConversationService,
   headers as headersInstance,
 } from './conversationService';
-let mockFetchArgs: MockFetch;
 
+let mockFetchArgs: MockFetch;
 jest.mock('node-fetch', () => {
   const fetch = (url, opts) => {
     mockFetchArgs = { url, opts };
@@ -51,6 +52,9 @@ jest.mock('node-fetch', () => {
   (fetch as any).Response = class {};
   return fetch;
 });
+jest.mock('../settingsData/store', () => ({
+  getSettings: () => null
+}));
 
 interface MockOpts {
   headers: Headers;
@@ -64,6 +68,18 @@ interface MockFetch {
 }
 
 describe('The ConversationService should call "fetch" with the expected parameters when executing', () => {
+  let mockTrackEvent;
+  const trackEventBackup = TelemetryService.trackEvent;
+
+  beforeEach(() => {
+    mockTrackEvent = jest.fn(() => null);
+    TelemetryService.trackEvent = mockTrackEvent;
+  });
+
+  afterAll(() => {
+    TelemetryService.trackEvent = trackEventBackup;
+  });
+
   test('the "addUser" function', () => {
     ConversationService.addUser('http://localhost', 'abcdef');
     const { url, opts } = mockFetchArgs;
@@ -76,6 +92,7 @@ describe('The ConversationService should call "fetch" with the expected paramete
     expect(members[0].name).toBeFalsy();
     expect(members[0].id).toBeFalsy();
     expect(headersInstance).toEqual(headers);
+    expect(mockTrackEvent).toHaveBeenCalledWith('sendActivity_addUser');
   });
 
   test('the "removeUser" function', () => {
@@ -89,6 +106,7 @@ describe('The ConversationService should call "fetch" with the expected paramete
     const users = JSON.parse(body);
     expect(users[0].id).toBe('1234');
     expect(headersInstance).toEqual(headers);
+    expect(mockTrackEvent).toHaveBeenCalledWith('sendActivity_removeUser');
   });
 
   test('the "removeRandomUser" function', () => {
@@ -113,6 +131,7 @@ describe('The ConversationService should call "fetch" with the expected paramete
     expect(method).toBe('POST');
     expect(body).toBeFalsy();
     expect(headersInstance).toEqual(headers);
+    expect(mockTrackEvent).toHaveBeenCalledWith('sendActivity_botContactAdded');
   });
 
   test('the "botContactRemoved" function', () => {
@@ -125,6 +144,7 @@ describe('The ConversationService should call "fetch" with the expected paramete
     expect(method).toBe('DELETE');
     expect(body).toBeFalsy();
     expect(headersInstance).toEqual(headers);
+    expect(mockTrackEvent).toHaveBeenCalledWith('sendActivity_botContactRemoved');
   });
 
   test('the "typing" function', () => {
@@ -137,6 +157,7 @@ describe('The ConversationService should call "fetch" with the expected paramete
     expect(method).toBe('POST');
     expect(body).toBeFalsy();
     expect(headersInstance).toEqual(headers);
+    expect(mockTrackEvent).toHaveBeenCalledWith('sendActivity_typing');
   });
 
   test('the "ping" function', () => {
@@ -149,6 +170,7 @@ describe('The ConversationService should call "fetch" with the expected paramete
     expect(method).toBe('POST');
     expect(body).toBeFalsy();
     expect(headersInstance).toEqual(headers);
+    expect(mockTrackEvent).toHaveBeenCalledWith('sendActivity_ping');
   });
 
   test('the "deleteUserData" function', () => {
@@ -161,5 +183,6 @@ describe('The ConversationService should call "fetch" with the expected paramete
     expect(method).toBe('DELETE');
     expect(body).toBeFalsy();
     expect(headersInstance).toEqual(headers);
+    expect(mockTrackEvent).toHaveBeenCalledWith('sendActivity_deleteUserData');
   });
 });

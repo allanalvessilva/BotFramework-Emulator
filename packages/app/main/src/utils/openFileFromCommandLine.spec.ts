@@ -30,6 +30,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
 import {
   CommandHandler,
   CommandRegistry,
@@ -39,8 +40,11 @@ import {
 } from '@bfemulator/sdk-shared';
 
 import { openFileFromCommandLine } from './openFileFromCommandLine';
-import * as readFileSyncUtil from './readFileSync';
+import { TelemetryService } from '../telemetry';
 
+jest.mock('../settingsData/store', () => ({
+  getSettings: () => null
+}));
 jest.mock('./readFileSync', () => ({
   readFileSync: file => {
     if (file.includes('error.transcript')) {
@@ -78,8 +82,17 @@ class MockCommandService extends DisposableImpl implements CommandService {
 
 describe('The openFileFromCommandLine util', () => {
   let commandService: MockCommandService;
+  let mockTrackEvent;
+  const trackEventBackup = TelemetryService.trackEvent;
+
   beforeEach(() => {
     commandService = new MockCommandService();
+    mockTrackEvent = jest.fn(() => null);
+    TelemetryService.trackEvent = mockTrackEvent;
+  });
+
+  afterAll(() => {
+    TelemetryService.trackEvent = trackEventBackup;
   });
 
   it('should make the appropriate calls to open a .bot file', async () => {
@@ -103,6 +116,7 @@ describe('The openFileFromCommandLine util', () => {
         },
       ],
     ]);
+    expect(mockTrackEvent).toHaveBeenCalledWith('transcriptFile_open', { method: 'protocol' });
   });
 
   it('should throw when the transcript is not an array', async () => {

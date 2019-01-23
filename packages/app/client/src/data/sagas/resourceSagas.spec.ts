@@ -241,7 +241,7 @@ describe('The ResourceSagas', () => {
     });
   });
 
-  describe(',when opening the resource in the Emulator', () => {
+  describe('when opening the resource in the Emulator', () => {
     let mockResource;
     beforeEach(() => {
       mockResource = BotConfigWithPathImpl.serviceFromJSON({
@@ -256,9 +256,15 @@ describe('The ResourceSagas', () => {
       expect(mockLocalCommandsCalled).toEqual([
         {
           commandName: 'chat:open',
-          args: ['the/file/path/chat.chat', true],
-        },
+          args: ['the/file/path/chat.chat', true]
+        }
       ]);
+      expect(mockRemoteCommandsCalled).toEqual([
+        {
+          commandName: SharedConstants.Commands.Telemetry.TrackEvent,
+          args: ['chatFile_open']
+        }
+      ])
     });
 
     it('should open a transcript file', async () => {
@@ -267,9 +273,14 @@ describe('The ResourceSagas', () => {
       expect(mockLocalCommandsCalled).toEqual([
         {
           commandName: 'transcript:open',
-          args: ['the/file/path/transcript.transcript'],
-        },
+          args: ['the/file/path/transcript.transcript']
+        }
       ]);
+      expect(mockRemoteCommandsCalled).toEqual([
+        {
+          commandName: SharedConstants.Commands.Telemetry.TrackEvent,
+          args: ['transcriptFile_open', { method: 'resources_pane' }]
+      }])
     });
   });
 

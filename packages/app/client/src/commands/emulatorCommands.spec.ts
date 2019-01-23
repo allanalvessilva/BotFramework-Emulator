@@ -140,6 +140,11 @@ describe('The emulator commands', () => {
         title: 'Open transcript file',
       }
     );
+    expect(remoteCallSpy).toHaveBeenCalledWith(
+      SharedConstants.Commands.Telemetry.TrackEvent,
+      'transcriptFile_open',
+      { method: 'file_menu' }
+    );
 
     expect(callSpy).toHaveBeenCalledWith(
       'transcript:open',
