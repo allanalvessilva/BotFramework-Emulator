@@ -40,6 +40,8 @@ import {
   textItem,
 } from '@bfemulator/emulator-core/lib/types/log/util';
 import LogLevel from '@bfemulator/emulator-core/lib/types/log/level';
+import { SharedConstants } from '@bfemulator/app-shared';
+
 import { bot } from '../../../../../data/reducer/bot';
 import { clientAwareSettings } from '../../../../../data/reducer/clientAwareSettingsReducer';
 import { load, setActive } from '../../../../../data/action/botActions';
@@ -47,7 +49,7 @@ import { theme } from '../../../../../data/reducer/themeReducer';
 import { switchTheme } from '../../../../../data/action/themeActions';
 import { ExtensionManager } from '../../../../../extensions';
 import { LogService } from '../../../../../platform/log/logService';
-import { SharedConstants } from '@bfemulator/app-shared';
+
 import { InspectorContainer } from './inspectorContainer';
 import { Inspector } from './inspector';
 
@@ -69,8 +71,8 @@ jest.mock('../../../../../platform/commands/commandServiceImpl', () => ({
   CommandServiceImpl: {
     remoteCall: (commandName, ...args) => {
       mockRemoteCallsMade.push({ commandName, args });
-    }
-  }
+    },
+  },
 }));
 
 const mockState = {
@@ -404,7 +406,7 @@ describe('The Inspector component', () => {
       expect(mockRemoteCallsMade).toHaveLength(1);
       expect(mockRemoteCallsMade[0]).toEqual({
         commandName: SharedConstants.Commands.Telemetry.TrackEvent,
-        args: ['someEvent', { some: 'data' }]
+        args: ['someEvent', { some: 'data' }],
       });
 
       event.args[1] = undefined;
@@ -412,7 +414,7 @@ describe('The Inspector component', () => {
       expect(mockRemoteCallsMade).toHaveLength(2);
       expect(mockRemoteCallsMade[1]).toEqual({
         commandName: SharedConstants.Commands.Telemetry.TrackEvent,
-        args: ['someEvent', {}]
+        args: ['someEvent', {}],
       });
     });
   });

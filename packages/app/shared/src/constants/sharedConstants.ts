@@ -150,7 +150,7 @@ export const SharedConstants = {
     },
 
     Telemetry: {
-      TrackEvent: 'telemetry:track-event'
+      TrackEvent: 'telemetry:track-event',
     },
 
     UI: {

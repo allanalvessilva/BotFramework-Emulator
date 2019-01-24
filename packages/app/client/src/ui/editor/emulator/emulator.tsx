@@ -382,7 +382,9 @@ export class EmulatorComponent extends React.Component<EmulatorProps, {}> {
 
     switch (option) {
       case NewUserId: {
-        CommandServiceImpl.remoteCall(TrackEvent, 'conversation_restart', { userId: 'new' });
+        CommandServiceImpl.remoteCall(TrackEvent, 'conversation_restart', {
+          userId: 'new',
+        });
         const newUserId = uniqueIdv4();
         // set new user as current on emulator facilities side
         await CommandServiceImpl.remoteCall(
@@ -394,7 +396,9 @@ export class EmulatorComponent extends React.Component<EmulatorProps, {}> {
       }
 
       case SameUserId:
-        CommandServiceImpl.remoteCall(TrackEvent, 'conversation_restart', { userId: 'same' });
+        CommandServiceImpl.remoteCall(TrackEvent, 'conversation_restart', {
+          userId: 'same',
+        });
         this.startNewConversation();
         break;
 

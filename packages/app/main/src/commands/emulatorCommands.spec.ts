@@ -34,6 +34,7 @@
 
 import '../fetchProxy';
 import * as path from 'path';
+
 import { combineReducers, createStore } from 'redux';
 import {
   BotConfigWithPathImpl,
@@ -42,6 +43,7 @@ import {
 import { BotConfiguration } from 'botframework-config';
 import { newBot, newEndpoint, SharedConstants } from '@bfemulator/app-shared';
 import { Conversation } from '@bfemulator/emulator-core';
+
 import * as store from '../botData/store';
 import { emulator } from '../emulator';
 import * as utils from '../utils';
@@ -50,6 +52,7 @@ import { bot } from '../botData/reducers/bot';
 import * as BotActions from '../botData/actions/botActions';
 import { TelemetryService } from '../telemetry';
 import { mainWindow } from '../main';
+
 import { registerCommands } from './emulatorCommands';
 
 const mockBotConfig = BotConfiguration;
@@ -454,15 +457,11 @@ describe('The emulatorCommands', () => {
     const newPath = path.normalize('chosen/AuthBot.bot');
     expect(getBotInfoByPathSpy).toHaveBeenCalledWith('some/path');
     expect(toSavableBotSpy).toHaveBeenCalledWith(mockBot, mockInfo.secret);
-<<<<<<< HEAD
     expect(patchBotJsonSpy).toHaveBeenCalledWith(
       newPath,
       Object.assign({}, mockInfo, { path: newPath })
     );
-=======
-    expect(patchBotJsonSpy).toHaveBeenCalledWith(newPath, Object.assign({}, mockInfo, { path: newPath }));
     expect(mockTrackEvent).toHaveBeenCalledWith('transcript_save');
->>>>>>> 9112640c... Added tests for Telemetry.
   });
 
   it('should feed a transcript from disk to a conversation', async () => {

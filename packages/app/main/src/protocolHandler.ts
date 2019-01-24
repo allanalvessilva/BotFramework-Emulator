@@ -39,7 +39,7 @@ import {
   newBot,
   newEndpoint,
   newNotification,
-  SharedConstants
+  SharedConstants,
 } from '@bfemulator/app-shared';
 import got from 'got';
 import { IEndpointService } from 'botframework-config/lib/schema';
@@ -49,6 +49,7 @@ import {
   BotConfigWithPath,
   BotConfigWithPathImpl,
 } from '@bfemulator/sdk-shared';
+
 import * as BotActions from './botData/actions/botActions';
 import { getStore } from './botData/store';
 import { Protocol } from './constants';
@@ -333,10 +334,14 @@ export const ProtocolHandler = new class ProtocolHandlerImpl
         secret
       );
       if (!bot) {
-        throw new Error(`Error occurred while trying to open bot at ${path} inside of protocol handler: Bot is invalid.`);
+        throw new Error(
+          `Error occurred while trying to open bot at ${path} inside of protocol handler: Bot is invalid.`
+        );
       }
     } catch (e) {
-      throw new Error(`Error occurred while trying to open bot at ${path} inside of protocol handler: ${e}`);
+      throw new Error(
+        `Error occurred while trying to open bot at ${path} inside of protocol handler: ${e}`
+      );
     }
 
     // apply any overrides
@@ -389,7 +394,7 @@ export const ProtocolHandler = new class ProtocolHandlerImpl
             } catch (e) {
               throw new Error(
                 `(ngrok running but not connected) Error occurred while ` +
-                `trying to deep link to bot project at ${path}: ${e}`
+                  `trying to deep link to bot project at ${path}: ${e}`
               );
             }
           }
@@ -412,7 +417,10 @@ export const ProtocolHandler = new class ProtocolHandlerImpl
       }
     }
     const numOfServices = bot.services && bot.services.length;
-    TelemetryService.trackEvent('bot_open', { method: 'protocol', numOfServices });
+    TelemetryService.trackEvent('bot_open', {
+      method: 'protocol',
+      numOfServices,
+    });
   }
 }();
 

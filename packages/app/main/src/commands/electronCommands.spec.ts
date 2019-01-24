@@ -39,9 +39,9 @@ import * as Electron from 'electron';
 import { load } from '../botData/actions/botActions';
 import { getStore } from '../botData/store';
 import { mainWindow } from '../main';
+import { TelemetryService } from '../telemetry';
 
 import { registerCommands } from './electronCommands';
-import { TelemetryService } from '../telemetry';
 
 let renameArgs;
 jest.mock('fs-extra', () => ({
@@ -65,11 +65,13 @@ jest.mock('electron', () => ({
   dialog: {
     showMessageBox: () => void 0,
     showOpenDialog: () => void 0,
-    showSaveDialog: () => void 0
+    showSaveDialog: () => void 0,
   },
   shell: {
-    get openExternal() { return mockOpenExternal; }
-  }
+    get openExternal() {
+      return mockOpenExternal;
+    },
+  },
 }));
 
 jest.mock('../main', () => ({
@@ -314,7 +316,9 @@ describe('the electron commands', () => {
 
   it('should open an external link', async () => {
     mockOpenExternal = jest.fn(() => null);
-    const { handler } = mockCommandRegistry.getCommand(SharedConstants.Commands.Electron.OpenExternal);
+    const { handler } = mockCommandRegistry.getCommand(
+      SharedConstants.Commands.Electron.OpenExternal
+    );
     const url = 'https://aka.ms/bf-emulator-testing';
     await handler(url);
 

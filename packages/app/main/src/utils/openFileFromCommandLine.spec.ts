@@ -39,11 +39,12 @@ import {
   DisposableImpl,
 } from '@bfemulator/sdk-shared';
 
-import { openFileFromCommandLine } from './openFileFromCommandLine';
 import { TelemetryService } from '../telemetry';
 
+import { openFileFromCommandLine } from './openFileFromCommandLine';
+
 jest.mock('../settingsData/store', () => ({
-  getSettings: () => null
+  getSettings: () => null,
 }));
 jest.mock('./readFileSync', () => ({
   readFileSync: file => {
@@ -116,7 +117,9 @@ describe('The openFileFromCommandLine util', () => {
         },
       ],
     ]);
-    expect(mockTrackEvent).toHaveBeenCalledWith('transcriptFile_open', { method: 'protocol' });
+    expect(mockTrackEvent).toHaveBeenCalledWith('transcriptFile_open', {
+      method: 'protocol',
+    });
   });
 
   it('should throw when the transcript is not an array', async () => {

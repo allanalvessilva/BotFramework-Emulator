@@ -256,15 +256,15 @@ describe('The ResourceSagas', () => {
       expect(mockLocalCommandsCalled).toEqual([
         {
           commandName: 'chat:open',
-          args: ['the/file/path/chat.chat', true]
-        }
+          args: ['the/file/path/chat.chat', true],
+        },
       ]);
       expect(mockRemoteCommandsCalled).toEqual([
         {
           commandName: SharedConstants.Commands.Telemetry.TrackEvent,
-          args: ['chatFile_open']
-        }
-      ])
+          args: ['chatFile_open'],
+        },
+      ]);
     });
 
     it('should open a transcript file', async () => {
@@ -273,14 +273,15 @@ describe('The ResourceSagas', () => {
       expect(mockLocalCommandsCalled).toEqual([
         {
           commandName: 'transcript:open',
-          args: ['the/file/path/transcript.transcript']
-        }
+          args: ['the/file/path/transcript.transcript'],
+        },
       ]);
       expect(mockRemoteCommandsCalled).toEqual([
         {
           commandName: SharedConstants.Commands.Telemetry.TrackEvent,
-          args: ['transcriptFile_open', { method: 'resources_pane' }]
-      }])
+          args: ['transcriptFile_open', { method: 'resources_pane' }],
+        },
+      ]);
     });
   });
 

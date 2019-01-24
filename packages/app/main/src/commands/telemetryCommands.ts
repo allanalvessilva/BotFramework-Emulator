@@ -33,6 +33,7 @@
 
 import { CommandRegistryImpl } from '@bfemulator/sdk-shared';
 import { SharedConstants } from '@bfemulator/app-shared';
+
 import { TelemetryService } from '../telemetry';
 
 /** Registers telemetry commands */
@@ -41,7 +42,10 @@ export function registerCommands(commandRegistry: CommandRegistryImpl) {
 
   // ---------------------------------------------------------------------------
   // Track event to App Insights
-  commandRegistry.registerCommand(Commands.TrackEvent, (name: string, properties?: { [key: string]: any }): any => {
-    TelemetryService.trackEvent(name, properties);
-  });
+  commandRegistry.registerCommand(
+    Commands.TrackEvent,
+    (name: string, properties?: { [key: string]: any }): any => {
+      TelemetryService.trackEvent(name, properties);
+    }
+  );
 }

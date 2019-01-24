@@ -32,9 +32,16 @@
 //
 
 // Cheating here and pulling in a module from node. Can be easily replaced if we ever move the emulator to the web.
-import { logEntry, textItem } from '@bfemulator/emulator-core/lib/types/log/util';
+import {
+  logEntry,
+  textItem,
+} from '@bfemulator/emulator-core/lib/types/log/util';
 import LogLevel from '@bfemulator/emulator-core/lib/types/log/level';
-import { ExtensionInspector, InspectorAccessory, InspectorAccessoryState } from '@bfemulator/sdk-shared';
+import {
+  ExtensionInspector,
+  InspectorAccessory,
+  InspectorAccessoryState,
+} from '@bfemulator/sdk-shared';
 import { Spinner } from '@bfemulator/ui-react';
 import { IBotConfiguration } from 'botframework-config/lib/schema';
 import * as React from 'react';
@@ -416,11 +423,12 @@ export class Inspector extends React.Component<InspectorProps, InspectorState> {
       }
 
       // record a telemetry from extension
-      case 'track-event':
+      case 'track-event': {
         const eventName = event.args[0];
         const eventProperties = event.args[1] || {};
         this.props.trackEvent(eventName, eventProperties);
         break;
+      }
 
       default:
         // eslint-disable-next-line no-console

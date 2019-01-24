@@ -182,7 +182,10 @@ describe('The azureAuthSaga', () => {
         ct++;
       }
       expect(ct).toBe(5);
-      expect(remoteCallSpy).toHaveBeenCalledWith(SharedConstants.Commands.Telemetry.TrackEvent, 'signIn_failure');
+      expect(remoteCallSpy).toHaveBeenCalledWith(
+        SharedConstants.Commands.Telemetry.TrackEvent,
+        'signIn_failure'
+      );
     });
 
     it('should contain 6 steps when the Azure login dialog prompt is confirmed and auth succeeds', async () => {

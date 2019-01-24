@@ -35,6 +35,7 @@ import * as React from 'react';
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
+import { SharedConstants } from '@bfemulator/app-shared';
 
 import { enable } from '../../../../data/action/presentationActions';
 import {
@@ -48,7 +49,6 @@ import {
   CONTENT_TYPE_TRANSCRIPT,
   CONTENT_TYPE_WELCOME_PAGE,
 } from '../../../../constants';
-import { SharedConstants } from '@bfemulator/app-shared';
 
 import { TabBarContainer } from './tabBarContainer';
 import { TabBar } from './tabBar';
@@ -81,8 +81,8 @@ jest.mock('../../../../platform/commands/commandServiceImpl', () => ({
     remoteCall: (commandName, ...args) => {
       mockRemoteCallsMade.push({ commandName, args });
       return Promise.resolve(true);
-    }
-  }
+    },
+  },
 }));
 
 describe('TabBar', () => {
@@ -138,7 +138,9 @@ describe('TabBar', () => {
 
     expect(mockDispatch).toHaveBeenCalledWith(enable());
     expect(mockRemoteCallsMade).toHaveLength(1);
-    expect(mockRemoteCallsMade[0].commandName).toBe(SharedConstants.Commands.Telemetry.TrackEvent);
+    expect(mockRemoteCallsMade[0].commandName).toBe(
+      SharedConstants.Commands.Telemetry.TrackEvent
+    );
     expect(mockRemoteCallsMade[0].args).toEqual(['tabBar_presentationMode']);
   });
 
@@ -219,12 +221,14 @@ describe('TabBar', () => {
 
   it('should handle a split click', () => {
     instance.onSplitClick();
-    
+
     expect(mockDispatch).toHaveBeenCalledWith(
       splitTab('transcript', 'doc1', 'primary', 'secondary')
     );
     expect(mockRemoteCallsMade).toHaveLength(1);
-    expect(mockRemoteCallsMade[0].commandName).toBe(SharedConstants.Commands.Telemetry.TrackEvent);
+    expect(mockRemoteCallsMade[0].commandName).toBe(
+      SharedConstants.Commands.Telemetry.TrackEvent
+    );
     expect(mockRemoteCallsMade[0].args).toEqual(['tabBar_splitTab']);
   });
 

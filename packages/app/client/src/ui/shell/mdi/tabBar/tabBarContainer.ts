@@ -32,6 +32,8 @@
 //
 
 import { connect } from 'react-redux';
+import { SharedConstants } from '@bfemulator/app-shared';
+
 import { closeDocument } from '../../../../data/action/chatActions';
 import {
   appendTab,
@@ -42,9 +44,9 @@ import {
 import { enable as enablePresentationMode } from '../../../../data/action/presentationActions';
 import { getTabGroupForDocument } from '../../../../data/editorHelpers';
 import { RootState } from '../../../../data/store';
-import { TabBar, TabBarProps } from './tabBar';
 import { CommandServiceImpl } from '../../../../platform/commands/commandServiceImpl';
-import { SharedConstants } from '@bfemulator/app-shared';
+
+import { TabBar, TabBarProps } from './tabBar';
 
 const mapStateToProps = (
   state: RootState,
@@ -62,14 +64,25 @@ const mapStateToProps = (
 });
 
 const mapDispatchToProps = (dispatch): TabBarProps => ({
-  splitTab: (contentType: string, documentId: string, srcEditorKey: string, destEditorKey: string) => {
-    CommandServiceImpl.remoteCall(SharedConstants.Commands.Telemetry.TrackEvent, 'tabBar_splitTab');
+  splitTab: (
+    contentType: string,
+    documentId: string,
+    srcEditorKey: string,
+    destEditorKey: string
+  ) => {
+    CommandServiceImpl.remoteCall(
+      SharedConstants.Commands.Telemetry.TrackEvent,
+      'tabBar_splitTab'
+    );
     dispatch(splitTab(contentType, documentId, srcEditorKey, destEditorKey));
   },
   appendTab: (srcEditorKey: string, destEditorKey: string, tabId: string) =>
     dispatch(appendTab(srcEditorKey, destEditorKey, tabId)),
   enablePresentationMode: () => {
-    CommandServiceImpl.remoteCall(SharedConstants.Commands.Telemetry.TrackEvent, 'tabBar_presentationMode');
+    CommandServiceImpl.remoteCall(
+      SharedConstants.Commands.Telemetry.TrackEvent,
+      'tabBar_presentationMode'
+    );
     dispatch(enablePresentationMode());
   },
   setActiveTab: (documentId: string) => dispatch(setActiveTab(documentId)),

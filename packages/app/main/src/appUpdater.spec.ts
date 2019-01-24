@@ -183,13 +183,7 @@ describe('AppUpdater', () => {
 
   it('should check for updates from the stable release repo', async () => {
     const mockSetFeedURL = jest.fn((_options: any) => null);
-<<<<<<< HEAD
-    const mockCheckForUpdates = jest.fn((_userInitiated: boolean) =>
-      Promise.resolve()
-    );
-=======
     const mockCheckForUpdates = jest.fn(() => Promise.resolve());
->>>>>>> 9112640c... Added tests for Telemetry.
     mockAutoUpdater.setFeedURL = mockSetFeedURL;
     mockAutoUpdater.checkForUpdates = mockCheckForUpdates;
 
@@ -204,22 +198,16 @@ describe('AppUpdater', () => {
     });
 
     expect(mockCheckForUpdates).toHaveBeenCalledTimes(1);
-    expect(mockTrackEvent).toHaveBeenCalledWith(
-      'update_check',
-      { auto: !AppUpdater.userInitiated, prerelease: false }
-    );
+    expect(mockTrackEvent).toHaveBeenCalledWith('update_check', {
+      auto: !AppUpdater.userInitiated,
+      prerelease: false,
+    });
   });
 
   it('should check for updates from the nightly release repo', async () => {
     mockSettings.usePrereleases = true;
     const mockSetFeedURL = jest.fn((_options: any) => null);
-<<<<<<< HEAD
-    const mockCheckForUpdates = jest.fn((_userInitiated: boolean) =>
-      Promise.resolve()
-    );
-=======
     const mockCheckForUpdates = jest.fn(() => Promise.resolve());
->>>>>>> 9112640c... Added tests for Telemetry.
     mockAutoUpdater.setFeedURL = mockSetFeedURL;
     mockAutoUpdater.checkForUpdates = mockCheckForUpdates;
 
@@ -232,20 +220,14 @@ describe('AppUpdater', () => {
     });
 
     expect(mockCheckForUpdates).toHaveBeenCalledTimes(1);
-    expect(mockTrackEvent).toHaveBeenCalledWith(
-      'update_check',
-      { auto: !AppUpdater.userInitiated, prerelease: true }
-    );
+    expect(mockTrackEvent).toHaveBeenCalledWith('update_check', {
+      auto: !AppUpdater.userInitiated,
+      prerelease: true,
+    });
   });
 
   it('should throw if there is an error while trying to check for updates', async () => {
-<<<<<<< HEAD
-    const mockCheckForUpdates = jest.fn((_userInitiated: boolean) =>
-      Promise.reject('ERROR')
-    );
-=======
     const mockCheckForUpdates = jest.fn(() => Promise.reject('ERROR'));
->>>>>>> 9112640c... Added tests for Telemetry.
     mockAutoUpdater.checkForUpdates = mockCheckForUpdates;
     mockAutoUpdater.setFeedURL = () => null;
 

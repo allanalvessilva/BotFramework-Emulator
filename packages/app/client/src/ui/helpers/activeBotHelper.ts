@@ -51,7 +51,7 @@ import { hasNonGlobalTabs } from '../../data/editorHelpers';
 import { store } from '../../data/store';
 import { CommandServiceImpl } from '../../platform/commands/commandServiceImpl';
 
-const { Bot, Electron, Emulator, Telemetry } = SharedConstants.Commands;
+const { Bot, Electron, Telemetry } = SharedConstants.Commands;
 
 export const ActiveBotHelper = new class {
   async confirmSwitchBot(): Promise<any> {
@@ -143,19 +143,15 @@ export const ActiveBotHelper = new class {
 
   async botAlreadyOpen(): Promise<any> {
     // TODO - localization
-    return await CommandServiceImpl.remoteCall(
-      Electron.ShowMessageBox,
-      true,
-      {
-        buttons: ['OK'],
-        cancelId: 0,
-        defaultId: 0,
-        message:
-          "This bot is already open. If you'd like to start a conversation, " +
-          'click on an endpoint from the Bot Explorer pane.',
-        type: 'question',
-      }
-    );
+    return await CommandServiceImpl.remoteCall(Electron.ShowMessageBox, true, {
+      buttons: ['OK'],
+      cancelId: 0,
+      defaultId: 0,
+      message:
+        "This bot is already open. If you'd like to start a conversation, " +
+        'click on an endpoint from the Bot Explorer pane.',
+      type: 'question',
+    });
   }
 
   async confirmAndCreateBot(
@@ -201,20 +197,17 @@ export const ActiveBotHelper = new class {
   }
 
   browseForBotFile(): Promise<any> {
-    return CommandServiceImpl.remoteCall(
-      Electron.ShowOpenDialog,
-      {
-        buttonLabel: 'Choose file',
-        filters: [
-          {
-            extensions: ['bot'],
-            name: 'Bot Files',
-          },
-        ],
-        properties: ['openFile'],
-        title: 'Open bot file',
-      }
-    );
+    return CommandServiceImpl.remoteCall(Electron.ShowOpenDialog, {
+      buttonLabel: 'Choose file',
+      filters: [
+        {
+          extensions: ['bot'],
+          name: 'Bot Files',
+        },
+      ],
+      properties: ['openFile'],
+      title: 'Open bot file',
+    });
   }
 
   async confirmAndOpenBotFromFile(filename?: string): Promise<any> {
@@ -249,7 +242,10 @@ export const ActiveBotHelper = new class {
           );
           await CommandServiceImpl.call(SharedConstants.Commands.Bot.Load, bot);
           const numOfServices = bot.services && bot.services.length;
-          CommandServiceImpl.remoteCall(Telemetry.TrackEvent, `bot_open`, { method: 'file_browse', numOfServices });
+          CommandServiceImpl.remoteCall(Telemetry.TrackEvent, `bot_open`, {
+            method: 'file_browse',
+            numOfServices,
+          });
         }
       }
     } catch (err) {

@@ -127,7 +127,7 @@ export const frameworkDefault: FrameworkSettings = {
   locale: '',
   usePrereleases: false,
   autoUpdate: true,
-  collectUsageData: true
+  collectUsageData: true,
 };
 
 export const windowStateDefault: WindowStateSettings = {

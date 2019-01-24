@@ -62,12 +62,25 @@ export function* getArmToken(
     // Result must be 1 which is a confirmation to sign in to Azure
     return result;
   }
-  const { RetrieveArmToken, PersistAzureLoginChanged } = SharedConstants.Commands.Azure;
+  const {
+    RetrieveArmToken,
+    PersistAzureLoginChanged,
+  } = SharedConstants.Commands.Azure;
   const { TrackEvent } = SharedConstants.Commands.Telemetry;
-  azureAuth = yield call(CommandServiceImpl.remoteCall.bind(CommandServiceImpl), RetrieveArmToken);
+  azureAuth = yield call(
+    CommandServiceImpl.remoteCall.bind(CommandServiceImpl),
+    RetrieveArmToken
+  );
   if (azureAuth && !('error' in azureAuth)) {
-    const persistLogin = yield DialogService.showDialog(action.payload.loginSuccessDialog, azureAuth);
-    yield call(CommandServiceImpl.remoteCall.bind(CommandServiceImpl), PersistAzureLoginChanged, persistLogin);
+    const persistLogin = yield DialogService.showDialog(
+      action.payload.loginSuccessDialog,
+      azureAuth
+    );
+    yield call(
+      CommandServiceImpl.remoteCall.bind(CommandServiceImpl),
+      PersistAzureLoginChanged,
+      persistLogin
+    );
     CommandServiceImpl.remoteCall(TrackEvent, 'signIn_success');
   } else {
     yield DialogService.showDialog(action.payload.loginFailedDialog);

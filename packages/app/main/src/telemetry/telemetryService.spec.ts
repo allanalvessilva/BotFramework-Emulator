@@ -38,14 +38,20 @@ let mockSetup;
 let mockDefaultClient;
 let mockStart;
 jest.mock('applicationinsights', () => ({
-  get defaultClient() { return mockDefaultClient; },
-  get setup() { return mockSetup; },
-  get start() { return mockStart; }
+  get defaultClient() {
+    return mockDefaultClient;
+  },
+  get setup() {
+    return mockSetup;
+  },
+  get start() {
+    return mockStart;
+  },
 }));
 
 let mockSettings;
 jest.mock('../settingsData/store', () => ({
-  getSettings: () => mockSettings
+  getSettings: () => mockSettings,
 }));
 
 describe('TelemetryService', () => {
@@ -56,12 +62,12 @@ describe('TelemetryService', () => {
     mockDefaultClient = {
       context: {
         keys: {
-          cloudRoleInstance: 'cloudRoleInstance'
+          cloudRoleInstance: 'cloudRoleInstance',
         },
         tags: {
-          cloudRoleInstance: 'SOME-MACHINE-NAME'
-        }
-      }
+          cloudRoleInstance: 'SOME-MACHINE-NAME',
+        },
+      },
     };
     mockAppInsights = {};
     mockSettings = { framework: { collectUsageData: true } };
@@ -83,12 +89,14 @@ describe('TelemetryService', () => {
       setAutoCollectDependencies: mockAutoCollect,
       setAutoCollectExceptions: mockAutoCollect,
       setAutoCollectPerformance: mockAutoCollect,
-      setAutoCollectRequests: mockAutoCollect
+      setAutoCollectRequests: mockAutoCollect,
     };
     (TelemetryService as any).startup();
 
     expect(mockSetup).toHaveBeenCalledTimes(1);
-    expect(mockSetup).toHaveBeenCalledWith('631faf57-1d84-40b4-9a71-fce28a3934a8');
+    expect(mockSetup).toHaveBeenCalledWith(
+      '631faf57-1d84-40b4-9a71-fce28a3934a8'
+    );
     expect(mockAutoCollect).toHaveBeenCalledTimes(5);
     expect(mockStart).toHaveBeenCalledTimes(1);
     expect(mockDefaultClient.context.tags.cloudRoleInstance).toBe('');
@@ -126,13 +134,16 @@ describe('TelemetryService', () => {
       setAutoCollectDependencies: mockAutoCollect,
       setAutoCollectExceptions: mockAutoCollect,
       setAutoCollectPerformance: mockAutoCollect,
-      setAutoCollectRequests: mockAutoCollect
+      setAutoCollectRequests: mockAutoCollect,
     };
     const mockAITrackEvent = jest.fn((_name, _properties) => null);
     (TelemetryService as any)._client = { trackEvent: mockAITrackEvent };
-    
+
     TelemetryService.trackEvent('someEvent', { some: 'property' });
     expect(mockStartup).toHaveBeenCalled;
-    expect(mockAITrackEvent).toHaveBeenCalledWith({ name: 'someEvent', properties: { some: 'property'} });
+    expect(mockAITrackEvent).toHaveBeenCalledWith({
+      name: 'someEvent',
+      properties: { some: 'property' },
+    });
   });
 });

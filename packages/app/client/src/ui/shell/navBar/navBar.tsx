@@ -99,7 +99,9 @@ export class NavBarComponent extends React.Component<NavBarProps, NavBarState> {
           // (https://github.com/Microsoft/BotFramework-Emulator/issues/825)
           // this.props.showExplorer(true);
           if (index === 2) {
-            this.props.trackEvent('navbar_selection', { selection: 'notifications' });
+            this.props.trackEvent('navbar_selection', {
+              selection: 'notifications',
+            });
           }
           this.props.navBarSelectionChanged(selectionMap[index]);
           this.setState({ selection: selectionMap[index] });

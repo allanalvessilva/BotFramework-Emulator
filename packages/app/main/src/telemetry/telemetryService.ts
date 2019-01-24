@@ -32,8 +32,9 @@
 //
 
 import * as AppInsights from 'applicationinsights';
-import { getSettings } from '../settingsData/store';
 import { SettingsImpl } from '@bfemulator/app-shared';
+
+import { getSettings } from '../settingsData/store';
 
 const INSTRUMENTATION_KEY = '631faf57-1d84-40b4-9a71-fce28a3934a8';
 
@@ -41,7 +42,10 @@ export class TelemetryService {
   private static _client: AppInsights.TelemetryClient;
   private static _hasStarted: boolean = false;
 
-  public static trackEvent(name: string, properties?: { [key: string]: any }): void {
+  public static trackEvent(
+    name: string,
+    properties?: { [key: string]: any }
+  ): void {
     if (!this.enabled || !name) {
       return;
     }
@@ -52,15 +56,14 @@ export class TelemetryService {
   }
 
   private static get enabled(): boolean {
-    const settings: SettingsImpl = getSettings() || {} as SettingsImpl;
+    const settings: SettingsImpl = getSettings() || ({} as SettingsImpl);
     const { framework = {} } = settings;
     return framework.collectUsageData;
   }
 
   private static startup(): void {
     if (!this._hasStarted) {
-      AppInsights
-        .setup(INSTRUMENTATION_KEY)
+      AppInsights.setup(INSTRUMENTATION_KEY)
         // turn off extra instrmentation
         .setAutoCollectConsole(false)
         .setAutoCollectDependencies(false)
@@ -68,7 +71,9 @@ export class TelemetryService {
         .setAutoCollectPerformance(false)
         .setAutoCollectRequests(false);
       // do not collect the user's machine name
-      AppInsights.defaultClient.context.tags[AppInsights.defaultClient.context.keys.cloudRoleInstance] = '';
+      AppInsights.defaultClient.context.tags[
+        AppInsights.defaultClient.context.keys.cloudRoleInstance
+      ] = '';
       AppInsights.start();
 
       this._client = AppInsights.defaultClient;

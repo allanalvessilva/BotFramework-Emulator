@@ -517,7 +517,10 @@ const createMainWindow = async () => {
   const endStartupTime = Date.now();
   const startupTime = (endStartupTime - beginStartupTime) / 1000;
   const launchedByProtocol = process.argv.some(arg => arg.includes(Protocol));
-  TelemetryService.trackEvent('app_launch', { method: launchedByProtocol ? 'protocol' : 'binary', startupTime });
+  TelemetryService.trackEvent('app_launch', {
+    method: launchedByProtocol ? 'protocol' : 'binary',
+    startupTime,
+  });
 };
 
 function loadMainPage() {

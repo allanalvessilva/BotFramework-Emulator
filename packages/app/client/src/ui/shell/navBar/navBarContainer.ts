@@ -32,14 +32,16 @@
 //
 
 import { connect } from 'react-redux';
+import { SharedConstants } from '@bfemulator/app-shared';
+
 import * as Constants from '../../../constants';
 import * as EditorActions from '../../../data/action/editorActions';
 import * as ExplorerActions from '../../../data/action/explorerActions';
 import * as NavBarActions from '../../../data/action/navBarActions';
 import { RootState } from '../../../data/store';
-import { NavBarComponent, NavBarProps } from './navBar';
 import { CommandServiceImpl } from '../../../platform/commands/commandServiceImpl';
-import { SharedConstants } from '@bfemulator/app-shared';
+
+import { NavBarComponent, NavBarProps } from './navBar';
 
 const mapStateToProps = (state: RootState): NavBarProps => ({
   notifications: state.notification.allIds,
@@ -52,16 +54,22 @@ const mapDispatchToProps = (dispatch): NavBarProps => ({
     dispatch(NavBarActions.select(newSelection)),
   openEmulatorSettings: () => {
     const { CONTENT_TYPE_APP_SETTINGS, DOCUMENT_ID_APP_SETTINGS } = Constants;
-    dispatch(EditorActions.open({
-      contentType: CONTENT_TYPE_APP_SETTINGS,
-      documentId: DOCUMENT_ID_APP_SETTINGS,
-      isGlobal: true,
-      meta: null
-    }));
+    dispatch(
+      EditorActions.open({
+        contentType: CONTENT_TYPE_APP_SETTINGS,
+        documentId: DOCUMENT_ID_APP_SETTINGS,
+        isGlobal: true,
+        meta: null,
+      })
+    );
   },
   trackEvent: (name: string, properties?: { [key: string]: any }) => {
-    CommandServiceImpl.remoteCall(SharedConstants.Commands.Telemetry.TrackEvent, name, properties);
-  }
+    CommandServiceImpl.remoteCall(
+      SharedConstants.Commands.Telemetry.TrackEvent,
+      name,
+      properties
+    );
+  },
 });
 
 export const NavBar = connect(

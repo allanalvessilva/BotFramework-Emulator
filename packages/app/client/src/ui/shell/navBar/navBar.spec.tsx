@@ -35,34 +35,36 @@ import * as React from 'react';
 import { mount, shallow } from 'enzyme';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { NavBar as NavBarContainer } from './navBarContainer';
-import { NavBarComponent as NavBar } from './navBar';
 import { SharedConstants } from '@bfemulator/app-shared';
+
 import * as Constants from '../../../constants';
 import { select } from '../../../data/action/navBarActions';
 import { open } from '../../../data/action/editorActions';
 import { showExplorer } from '../../../data/action/explorerActions';
+
+import { NavBarComponent as NavBar } from './navBar';
+import { NavBar as NavBarContainer } from './navBarContainer';
 
 let mockRemoteCallsMade;
 jest.mock('../../../platform/commands/commandServiceImpl', () => ({
   CommandServiceImpl: {
     remoteCall: jest.fn((commandName, ...args) => {
       mockRemoteCallsMade.push({ commandName, args });
-    })
-  }
+    }),
+  },
 }));
 jest.mock('./navBar.scss', () => ({}));
 
 let mockState;
-let mockNotifications = {
+const mockNotifications = {
   id1: { read: true },
   id2: { read: true },
-  id3: { read: false }
+  id3: { read: false },
 };
 jest.mock('../../../notificationManager', () => ({
   NotificationManager: {
-    get: (id) => mockNotifications[id]
-  }
+    get: id => mockNotifications[id],
+  },
 }));
 
 describe('<NavBar/>', () => {
@@ -74,18 +76,18 @@ describe('<NavBar/>', () => {
   beforeEach(() => {
     mockState = {
       bot: {
-        activeBot: {}
+        activeBot: {},
       },
       notification: {
-        allIds: Object.keys(mockNotifications)
-      }
+        allIds: Object.keys(mockNotifications),
+      },
     };
     const mockStore = createStore((_state, _action) => mockState);
     mockDispatch = jest.spyOn(mockStore, 'dispatch');
     mockRemoteCallsMade = [];
     wrapper = mount(
-      <Provider store={ mockStore }>
-        <NavBarContainer/>
+      <Provider store={mockStore}>
+        <NavBarContainer />
       </Provider>
     );
     node = wrapper.find(NavBar);
@@ -105,45 +107,52 @@ describe('<NavBar/>', () => {
 
   it('should select the corresponding nav section', () => {
     const parentElement: any = {
-      children: ['botExplorer', 'resources', 'settings']
+      children: ['botExplorer', 'resources', 'settings'],
     };
     const currentTarget = {
       name: 'notifications',
-      parentElement
+      parentElement,
     };
     // wedge notifications "anchor" in between "resources" and "settings"
     parentElement.children.splice(2, 0, currentTarget);
     const mockEvent = {
-      currentTarget
+      currentTarget,
     };
     instance.onLinkClick(mockEvent);
 
     expect(mockRemoteCallsMade).toHaveLength(1);
-    expect(mockRemoteCallsMade[0].commandName).toBe(SharedConstants.Commands.Telemetry.TrackEvent);
-    expect(mockRemoteCallsMade[0].args).toEqual(['navbar_selection', { selection: 'notifications' }]);
+    expect(mockRemoteCallsMade[0].commandName).toBe(
+      SharedConstants.Commands.Telemetry.TrackEvent
+    );
+    expect(mockRemoteCallsMade[0].args).toEqual([
+      'navbar_selection',
+      { selection: 'notifications' },
+    ]);
     expect(mockDispatch).toHaveBeenCalledWith(select('navbar.notifications'));
     expect(instance.state.selection).toBe('navbar.notifications');
   });
 
   it('should open the app settings editor', () => {
     const parentElement: any = {
-      children: ['botExplorer', 'resources', 'notifications']
+      children: ['botExplorer', 'resources', 'notifications'],
     };
     const currentTarget = {
       name: 'settings',
-      parentElement
+      parentElement,
     };
     const mockEvent = {
-      currentTarget
+      currentTarget,
     };
     instance.onLinkClick(mockEvent);
-    
-    expect(mockDispatch).toHaveBeenCalledWith(open({
-      contentType: Constants.CONTENT_TYPE_APP_SETTINGS,
-      documentId: Constants.DOCUMENT_ID_APP_SETTINGS,
-      isGlobal: true,
-      meta: null
-    }));
+
+    expect(mockDispatch).toHaveBeenCalledWith(
+      open({
+        contentType: Constants.CONTENT_TYPE_APP_SETTINGS,
+        documentId: Constants.DOCUMENT_ID_APP_SETTINGS,
+        isGlobal: true,
+        meta: null,
+      })
+    );
   });
 
   it('should show / hide the explorer', () => {

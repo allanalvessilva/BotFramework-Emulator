@@ -137,7 +137,9 @@ export function registerCommands(commandRegistry: CommandRegistry) {
         link => link.href
       ); // href is fully qualified
       store.dispatch(switchTheme(themeName, themeComponents));
-      CommandServiceImpl.remoteCall(Telemetry.TrackEvent, 'app_chooseTheme', { themeName });
+      CommandServiceImpl.remoteCall(Telemetry.TrackEvent, 'app_chooseTheme', {
+        themeName,
+      });
     }
   );
 

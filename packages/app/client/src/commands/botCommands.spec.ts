@@ -98,9 +98,14 @@ describe('The bot commands', () => {
     );
     handler({});
     expect(spy).toHaveBeenCalledWith({});
-    expect(remoteCallArgs[0][0]).toBe(SharedConstants.Commands.Telemetry.TrackEvent);
+    expect(remoteCallArgs[0][0]).toBe(
+      SharedConstants.Commands.Telemetry.TrackEvent
+    );
     expect(remoteCallArgs[0][1]).toBe('bot_open');
-    expect(remoteCallArgs[0][2]).toEqual({ method: 'bots_list', numOfServices: undefined });
+    expect(remoteCallArgs[0][2]).toEqual({
+      method: 'bots_list',
+      numOfServices: undefined,
+    });
   });
 
   it('should make the appropriate calls to close a bot', () => {

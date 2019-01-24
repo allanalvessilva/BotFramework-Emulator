@@ -32,6 +32,7 @@
 //
 import { SharedConstants } from '@bfemulator/app-shared';
 import { CommandRegistryImpl } from '@bfemulator/sdk-shared';
+
 import {
   CONTENT_TYPE_APP_SETTINGS,
   DOCUMENT_ID_APP_SETTINGS,
@@ -56,8 +57,9 @@ import {
   OpenBotDialogContainer,
   SecretPromptDialogContainer,
 } from '../ui/dialogs';
-import { registerCommands } from './uiCommands';
 import { CommandServiceImpl } from '../platform/commands/commandServiceImpl';
+
+import { registerCommands } from './uiCommands';
 
 jest.mock('../ui/dialogs', () => ({
   AzureLoginPromptDialogContainer: class {},
@@ -154,7 +156,7 @@ describe('the uiCommands', () => {
 
   it('should set the proper href on the theme tag when the SwitchTheme command is dispatched', () => {
     const remoteCallSpy = jest.spyOn(CommandServiceImpl, 'remoteCall');
-    let link = document.createElement('link');
+    const link = document.createElement('link');
     link.id = 'themeVars';
     document.querySelector('head').appendChild(link);
     registry.getCommand(Commands.SwitchTheme).handler('light', './light.css');

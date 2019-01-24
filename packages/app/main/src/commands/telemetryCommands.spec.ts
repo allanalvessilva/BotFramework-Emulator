@@ -1,5 +1,3 @@
-import { CommandRegistryImpl } from "@bfemulator/sdk-shared";
-
 //
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
@@ -33,14 +31,17 @@ import { CommandRegistryImpl } from "@bfemulator/sdk-shared";
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+import { SharedConstants } from '@bfemulator/app-shared';
+import { CommandRegistryImpl } from '@bfemulator/sdk-shared';
+
+import { TelemetryService } from '../telemetry';
+
 import { registerCommands } from './telemetryCommands';
-import { TelemetryService } from "../telemetry";
-import { SharedConstants } from "@bfemulator/app-shared";
 
 jest.mock('../settingsData/store', () => ({
   getSettings: () => ({
-    framework: {}
-  })
+    framework: {},
+  }),
 }));
 
 const mockRegistry = new CommandRegistryImpl();
@@ -60,7 +61,9 @@ describe('The telemetry commands', () => {
   });
 
   it('should track events to App Insights', async () => {
-    const { handler } = mockRegistry.getCommand(SharedConstants.Commands.Telemetry.TrackEvent);
+    const { handler } = mockRegistry.getCommand(
+      SharedConstants.Commands.Telemetry.TrackEvent
+    );
     await handler('test_event', { some: 'data' });
 
     expect(mockTrackEvent).toHaveBeenCalledWith('test_event', { some: 'data' });

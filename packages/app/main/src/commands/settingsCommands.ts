@@ -44,15 +44,18 @@ export function registerCommands(commandRegistry: CommandRegistryImpl) {
 
   // ---------------------------------------------------------------------------
   // Saves global app settings
-  commandRegistry.registerCommand(Commands.SaveAppSettings, (settings: FrameworkSettings): any => {
-    const frameworkSettings = getSettings().framework;
-    const { ngrokPath = '' } = frameworkSettings;
-    const { ngrokPath: newNgrokPath } = settings;
-    if (newNgrokPath !== ngrokPath) {
-      TelemetryService.trackEvent('app_configureNgrok');
+  commandRegistry.registerCommand(
+    Commands.SaveAppSettings,
+    (settings: FrameworkSettings): any => {
+      const frameworkSettings = getSettings().framework;
+      const { ngrokPath = '' } = frameworkSettings;
+      const { ngrokPath: newNgrokPath } = settings;
+      if (newNgrokPath !== ngrokPath) {
+        TelemetryService.trackEvent('app_configureNgrok');
+      }
+      dispatch(setFramework(settings));
     }
-    dispatch(setFramework(settings));
-  });
+  );
 
   // ---------------------------------------------------------------------------
   // Get and return app settings from store

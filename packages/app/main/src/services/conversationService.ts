@@ -38,8 +38,12 @@ export const headers = {
 };
 
 export class ConversationService {
-
-  public static addUser(serviceUrl: string, conversationId: string, name?: string, id?: string) {
+  public static addUser(
+    serviceUrl: string,
+    conversationId: string,
+    name?: string,
+    id?: string
+  ) {
     TelemetryService.trackEvent('sendActivity_addUser');
     const url = `${serviceUrl}/emulator/${conversationId}/users`;
     return fetch(url, {
@@ -49,7 +53,11 @@ export class ConversationService {
     });
   }
 
-  public static removeUser(serviceUrl: string, conversationId: string, id: string) {
+  public static removeUser(
+    serviceUrl: string,
+    conversationId: string,
+    id: string
+  ) {
     TelemetryService.trackEvent('sendActivity_removeUser');
     const url = `${serviceUrl}/emulator/${conversationId}/users`;
     return fetch(url, {

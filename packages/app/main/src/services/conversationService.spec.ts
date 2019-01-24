@@ -32,6 +32,7 @@
 //
 
 import { TelemetryService } from '../telemetry';
+
 import '../fetchProxy';
 import {
   ConversationService,
@@ -53,7 +54,7 @@ jest.mock('node-fetch', () => {
   return fetch;
 });
 jest.mock('../settingsData/store', () => ({
-  getSettings: () => null
+  getSettings: () => null,
 }));
 
 interface MockOpts {
@@ -144,7 +145,9 @@ describe('The ConversationService should call "fetch" with the expected paramete
     expect(method).toBe('DELETE');
     expect(body).toBeFalsy();
     expect(headersInstance).toEqual(headers);
-    expect(mockTrackEvent).toHaveBeenCalledWith('sendActivity_botContactRemoved');
+    expect(mockTrackEvent).toHaveBeenCalledWith(
+      'sendActivity_botContactRemoved'
+    );
   });
 
   test('the "typing" function', () => {

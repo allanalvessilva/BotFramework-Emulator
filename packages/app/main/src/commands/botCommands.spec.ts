@@ -55,9 +55,9 @@ import {
   chatWatcher,
   transcriptsWatcher,
 } from '../watchers';
+import { TelemetryService } from '../telemetry';
 
 import { registerCommands } from './botCommands';
-import { TelemetryService } from '../telemetry';
 
 const mockBotConfig = BotConfiguration;
 let mockStore;
@@ -166,7 +166,10 @@ describe('The botCommands', () => {
     expect(patchBotInfoSpy).toHaveBeenCalledWith(botToSave.path, mockBotInfo);
     expect(saveBotSpy).toHaveBeenCalledWith(botToSave);
     expect(result).toEqual(botToSave);
-    expect(mockTrackEvent).toHaveBeenCalledWith('bot_create', { path: mockBotInfo.path, hasSecret: true });
+    expect(mockTrackEvent).toHaveBeenCalledWith('bot_create', {
+      path: mockBotInfo.path,
+      hasSecret: true,
+    });
   });
 
   it('should open a bot and set the default transcript and chat path if none exists', async () => {

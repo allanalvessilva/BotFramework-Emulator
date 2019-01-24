@@ -136,7 +136,9 @@ function* doOpenResource(
     CommandServiceImpl.remoteCall(TrackEvent, 'chatFile_open');
   } else if (isTranscriptFile(path)) {
     yield CommandServiceImpl.call(OpenTranscript, path);
-    CommandServiceImpl.remoteCall(TrackEvent, 'transcriptFile_open', { method: 'resources_pane' });
+    CommandServiceImpl.remoteCall(TrackEvent, 'transcriptFile_open', {
+      method: 'resources_pane',
+    });
   }
   // unknown types just fall into the abyss
 }

@@ -84,11 +84,13 @@ export function registerCommands(commandRegistry: CommandRegistryImpl) {
         CommandServiceImpl.remoteCall(TrackEvent, 'livechat_openRemote');
       }
 
-      store.dispatch(EditorActions.open({
-        contentType: Constants.CONTENT_TYPE_LIVE_CHAT,
-        documentId,
-        isGlobal: false
-      }));
+      store.dispatch(
+        EditorActions.open({
+          contentType: Constants.CONTENT_TYPE_LIVE_CHAT,
+          documentId,
+          isGlobal: false,
+        })
+      );
       return documentId;
     }
   );
@@ -143,7 +145,9 @@ export function registerCommands(commandRegistry: CommandRegistryImpl) {
         dialogOptions
       );
       await CommandServiceImpl.call(Emulator.OpenTranscript, filename);
-      CommandServiceImpl.remoteCall(TrackEvent, 'transcriptFile_open', { method: 'file_menu' });
+      CommandServiceImpl.remoteCall(TrackEvent, 'transcriptFile_open', {
+        method: 'file_menu',
+      });
     } catch (e) {
       const errMsg = `Error while opening transcript file: ${e}`;
       const notification = newNotification(errMsg);

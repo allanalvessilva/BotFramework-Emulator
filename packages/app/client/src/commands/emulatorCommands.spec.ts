@@ -127,7 +127,9 @@ describe('The emulator commands', () => {
     const remoteCallSpy = jest
       .spyOn(CommandServiceImpl, 'remoteCall')
       .mockResolvedValue('transcript.transcript');
-    const callSpy = jest.spyOn(CommandServiceImpl, 'call');
+    const callSpy = jest
+      .spyOn(CommandServiceImpl, 'call')
+      .mockResolvedValue(null);
 
     await handler();
 

@@ -32,9 +32,12 @@
 //
 
 import * as path from 'path';
+
 import { SharedConstants } from '@bfemulator/app-shared';
 import { CommandService } from '@bfemulator/sdk-shared';
+
 import { TelemetryService } from '../telemetry';
+
 import { readFileSync } from './readFileSync';
 
 export async function openFileFromCommandLine(

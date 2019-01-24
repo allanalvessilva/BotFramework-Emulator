@@ -32,10 +32,12 @@
 //
 
 import { connect } from 'react-redux';
-import { RootState } from '../../../../../data/store';
-import { Inspector } from './inspector';
-import { CommandServiceImpl } from '../../../../../platform/commands/commandServiceImpl';
 import { SharedConstants } from '@bfemulator/app-shared';
+
+import { RootState } from '../../../../../data/store';
+import { CommandServiceImpl } from '../../../../../platform/commands/commandServiceImpl';
+
+import { Inspector } from './inspector';
 
 const mapStateToProps = (state: RootState, ownProps: any) => {
   const { bot, theme, clientAwareSettings } = state;
@@ -51,12 +53,19 @@ const mapStateToProps = (state: RootState, ownProps: any) => {
   };
 };
 
-const mapDispatchToProps = (_dispatch) => {
+const mapDispatchToProps = _dispatch => {
   return {
     trackEvent: (name: string, properties?: { [key: string]: any }) => {
-      CommandServiceImpl.remoteCall(SharedConstants.Commands.Telemetry.TrackEvent, name, properties);
-    }
+      CommandServiceImpl.remoteCall(
+        SharedConstants.Commands.Telemetry.TrackEvent,
+        name,
+        properties
+      );
+    },
   };
 };
 
-export const InspectorContainer = connect(mapStateToProps, mapDispatchToProps)(Inspector);
+export const InspectorContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Inspector);

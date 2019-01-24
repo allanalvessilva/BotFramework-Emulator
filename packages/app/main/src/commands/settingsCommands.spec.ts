@@ -1,5 +1,3 @@
-import { CommandRegistryImpl } from "@bfemulator/sdk-shared";
-
 //
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
@@ -33,16 +31,21 @@ import { CommandRegistryImpl } from "@bfemulator/sdk-shared";
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import { registerCommands } from './settingsCommands';
-import { TelemetryService } from "../telemetry";
-import { SharedConstants } from "@bfemulator/app-shared";
+import { SharedConstants } from '@bfemulator/app-shared';
+import { CommandRegistryImpl } from '@bfemulator/sdk-shared';
+
+import { TelemetryService } from '../telemetry';
 import { setFramework } from '../settingsData/actions/frameworkActions';
 
-const mockSettings = { framework: { ngrokPath: 'path/to/ngrok.exe' }}
+import { registerCommands } from './settingsCommands';
+
+const mockSettings = { framework: { ngrokPath: 'path/to/ngrok.exe' } };
 let mockDispatch;
 jest.mock('../settingsData/store', () => ({
-  get dispatch() { return mockDispatch; },
-  getSettings: () => mockSettings
+  get dispatch() {
+    return mockDispatch;
+  },
+  getSettings: () => mockSettings,
 }));
 
 const mockRegistry = new CommandRegistryImpl();
@@ -63,7 +66,9 @@ describe('The settings commands', () => {
   });
 
   it('should save the global app settings', async () => {
-    const { handler } = mockRegistry.getCommand(SharedConstants.Commands.Settings.SaveAppSettings);
+    const { handler } = mockRegistry.getCommand(
+      SharedConstants.Commands.Settings.SaveAppSettings
+    );
     const mockSettings = { ngrokPath: 'other/path/to/ngrok.exe' };
     await handler(mockSettings);
 
@@ -72,7 +77,9 @@ describe('The settings commands', () => {
   });
 
   it('should load the app settings from the store', async () => {
-    const { handler } = mockRegistry.getCommand(SharedConstants.Commands.Settings.LoadAppSettings);
+    const { handler } = mockRegistry.getCommand(
+      SharedConstants.Commands.Settings.LoadAppSettings
+    );
     const appSettings = await handler();
 
     expect(appSettings).toBe(mockSettings.framework);
